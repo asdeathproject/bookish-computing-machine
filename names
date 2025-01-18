@@ -1,0 +1,73 @@
+-- Optimized by Zeezy2204
+
+-- Memory mapped tables are much more optimized than table.find or pairs indexing
+
+-- It also becomes much easier to edit overall
+
+local EXCLUDED_BY_CLASS_NAME = {
+
+	"RemoteEvent",
+	"ObjectValue",
+	"NumberValue",
+	"Humanoid",
+	"Sound",
+
+}
+
+local EXCLUDED_BY_NAME = {
+
+	"jesus",
+	"jesusface",
+	"christ",
+	"mok",
+	"resrom",
+	"DeleteMe",
+	"ミノタウロス",
+	"サターン",
+	"寺",
+	"Enemy",
+	"Velocity",
+	"Handle",
+	"TRNUOX",
+	"HumanoidRootPart",
+	"RemoteEvent",
+	"Left Leg",
+	"Left Arm",
+	"Right Arm",
+	"Right Leg",
+	"Head",
+	"Torso",
+
+}
+
+
+local Players = game:GetService("Players")
+local User = Players.LocalPlayer
+local Character = User.Character or User.CharacterAdded:Wait()
+
+local XC = {}
+local XN = {}
+
+for _,v in ipairs(EXCLUDED_BY_CLASS_NAME) do
+	XC[v] = true
+end
+
+for _,v in ipairs(EXCLUDED_BY_NAME) do
+	XN[v] = true
+end
+
+local function Check(v)
+	if XN[v.Name] == nil and XC[v.ClassName] == nil and v ~= Character and v:IsDescendantOf(Character) == false then
+		local str = ""
+		for i = 1, math.random(3,18) do
+			str ..= string.char(math.random(1,126))
+		end
+		v.Name = str
+	end
+end
+
+for _,v in pairs(workspace:GetDescendants()) do
+	Check(v)
+end
+
+workspace.DescendantAdded:Connect(Check)
