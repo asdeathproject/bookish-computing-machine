@@ -31,4 +31,13 @@ local asddsa = Instance.new("Sound", workspace)
 asddsa.Name = "失敗"
 asddsa.SoundId = "rbxassetid://212075345"
 asddsa.Volume = 10
+asddsa.Looped = true
 asddsa.Playing = true
+while true do
+	for _,parts in pairs(workspace:GetChildren()) do
+		if parts.Name == "Part" then
+			wait(0.001)
+			parts.Color = Color3.fromRGB(math.random(0, 55), math.random(0, 55), math.random(0, 55))
+		end
+	end
+end
