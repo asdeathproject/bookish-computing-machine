@@ -1,0 +1,24 @@
+game.Lighting:ClearAllChildren()
+local NewSky = Instance.new("Sky")
+NewSky.SunAngularSize = 0
+NewSky.MoonAngularSize = 0
+NewSky.StarCount = 0
+NewSky.SkyboxBk = "rbxassetid://94147163866666"
+NewSky.SkyboxDn = "rbxassetid://94147163866666"
+NewSky.SkyboxFt = "rbxassetid://94147163866666"
+NewSky.SkyboxLf = "rbxassetid://94147163866666"
+NewSky.SkyboxRt = "rbxassetid://94147163866666"
+NewSky.SkyboxUp = "rbxassetid://94147163866666"
+NewSky.Parent = game.Lighting
+game.Lighting.GlobalShadows = false
+game.Lighting.ShadowSoftness = 1
+game.Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+game.Lighting.FogEnd = 100
+game.Lighting.FogStart = 45
+game.StarterPlayer.CameraMaxZoomDistance = 40
+game.StarterPlayer.CameraMinZoomDistance = 40
+local Color = Instance.new("ColorCorrectionEffect")
+Color.Brightness = -1
+Color.Enabled = false
+Color.Name = "Color"
+Color.Parent = game.Lighting
