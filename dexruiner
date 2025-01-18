@@ -1,0 +1,95 @@
+local RunService = game:GetService("RunService")
+local RNG = Random.new()
+
+local OtherStuff = {
+	
+"Team",
+"Flag",
+"Folder",
+"WorldModel",
+"Configuration",
+"SelectionPartLasso",
+"ClickDetector",
+"CustomEvent",
+"FloorWire",
+"UniversalConstraint",
+"Decal",
+"RenderingTest",
+"CharacterMesh",
+"Glue",
+"HumanoidController",
+"SkateboardController",
+"VehicleController",
+
+
+
+	
+}
+
+local PartStuff = {
+	
+	"FlagStand",
+	"Part",
+	"NegateOperation",
+	"MeshPart",
+	"CornerWedgePart",
+	"Seat",
+	"VehicleSeat"
+	
+}
+
+
+for i, v in ipairs(OtherStuff) do
+	OtherStuff[i] = Instance.new(v)
+end
+
+for i, v in ipairs(PartStuff) do
+	PartStuff[i] = Instance.new(v)
+	PartStuff[i].Anchored = true
+	PartStuff[i].CanCollide = false
+	PartStuff[i].Transparency = 1
+end
+
+local tau = math.pi * 2
+local random = math.random
+
+local function fill(service, amount, multiple)
+	for i = 1, amount do
+		RunService.Heartbeat:Wait()
+		for i = 1, multiple do
+			if RNG:NextInteger(1, 32) ~= 1 then
+				local new = OtherStuff[random(1, #OtherStuff)]:Clone()
+				new.Parent = service
+			else
+				local new = PartStuff[random(1, #PartStuff)]:Clone()
+				new.Size = Vector3.new(
+					random(1, 12),
+					random(1, 12),
+					random(1, 12)
+				)
+				new.CFrame = CFrame.new(
+					RNG:NextInteger(-9e9, 9e9),
+					RNG:NextInteger(-9e9, 9e9),
+					RNG:NextInteger(-9e9, 9e9)
+				) * CFrame.Angles(
+					random() * tau,
+					random() * tau,
+					random() * tau
+				)
+				if RNG:NextNumber(1, 4) == 1 then
+					local model = Instance.new("Model")
+					new.Parent = model
+					model.Parent = service
+				else
+					new.Parent = service
+				end
+			end
+		end
+	end
+end
+
+fill(game:GetService("Workspace"), 528, 64)
+fill(game:GetService("ReplicatedStorage"), 64, 64)
+fill(game:GetService("StarterPlayer").StarterPlayerScripts, 32, 32)
+fill(game:GetService("StarterPlayer").StarterCharacterScripts, 32, 32)
+
