@@ -17,6 +17,7 @@ game.Lighting.FogEnd = 100
 game.Lighting.FogStart = 45
 game.StarterPlayer.CameraMaxZoomDistance = 40
 game.StarterPlayer.CameraMinZoomDistance = 40
+game.Workspace.CurrentCamera.FieldOfView = 35
 local Color = Instance.new("ColorCorrectionEffect")
 Color.Brightness = -1
 Color.Enabled = false
