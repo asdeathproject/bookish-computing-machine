@@ -1,0 +1,133 @@
+------------------------------------------------------------------------
+-- KARNEVIL LIGHTING
+------------------------------------------------------------------------
+
+local nighttime = true
+
+local Lighting     = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local Players      = game:GetService("Players")
+local RunService   = game:GetService("RunService")
+
+------------------------------------------------------------------------
+-- LIGHTING SETUP
+------------------------------------------------------------------------
+
+task.spawn(function()
+    Lighting.Ambient           = Color3.new(0, 0, 0)
+    Lighting.ColorShift_Top    = Color3.new(0, 0, 0)
+    Lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
+    Lighting.OutdoorAmbient    = Color3.new(0, 0, 0)
+    Lighting.GlobalShadows     = true
+    Lighting.ShadowSoftness    = 0.2
+    Lighting.Brightness        = 2
+
+    local cc            = Instance.new("ColorCorrectionEffect")
+    cc.Name             = "Evil"
+    cc.Brightness       = -0.2
+    cc.Contrast         = 0.3
+    cc.Saturation       = 1.5
+    cc.Parent           = Lighting
+end)
+
+------------------------------------------------------------------------
+-- DESTROY ATMOSPHERE
+------------------------------------------------------------------------
+
+task.spawn(function()
+    local atmo = Lighting:FindFirstChildOfClass("Atmosphere")
+    if atmo then atmo:Destroy() end
+end)
+
+------------------------------------------------------------------------
+-- NIGHTTIME LOCK
+------------------------------------------------------------------------
+
+task.spawn(function()
+    if not nighttime then return end
+    while true do
+        task.wait()
+        Lighting.ClockTime          = 0
+        Lighting.GeographicLatitude = 45
+    end
+end)
+
+------------------------------------------------------------------------
+-- ENVIRONMENT SPECULAR SCALE PULSE
+------------------------------------------------------------------------
+
+task.spawn(function()
+    while true do
+        TweenService:Create(Lighting,
+            TweenInfo.new(20, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+            { EnvironmentSpecularScale = 1 }
+        ):Play()
+        task.wait(20)
+        TweenService:Create(Lighting,
+            TweenInfo.new(20, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+            { EnvironmentSpecularScale = 0 }
+        ):Play()
+        task.wait(20)
+    end
+end)
+
+------------------------------------------------------------------------
+-- FOG AND EXPOSURE FLICKER
+------------------------------------------------------------------------
+
+task.spawn(function()
+    while true do
+        task.wait(math.random(100, 500) * 0.001)
+        Lighting.FogColor = Color3.new(
+            math.random(250000, 750000)/255,
+            1176.47,
+            980.392
+        )
+        Lighting.ExposureCompensation = math.random(-20, 20) * 0.001
+    end
+end)
+
+------------------------------------------------------------------------
+-- PLAYER LIGHTS
+------------------------------------------------------------------------
+
+task.spawn(function()
+    local CONFIG = {
+        lightColor      = Color3.new(1, -1, -255),
+        lightBrightness = 0.8,
+        lightRange      = 22,
+        lightShadows    = false,
+    }
+
+    local function giveLight(character)
+        local torso = character:FindFirstChild("Torso")
+            or character:FindFirstChild("UpperTorso")
+        if not torso then return end
+        if torso:FindFirstChildOfClass("PointLight") then return end
+
+        local light             = Instance.new("PointLight")
+        light.Color             = CONFIG.lightColor
+        light.Brightness        = CONFIG.lightBrightness
+        light.Range             = CONFIG.lightRange
+        light.Shadows           = CONFIG.lightShadows
+        light.Parent            = torso
+    end
+
+    local function connectPlayer(player)
+        player.CharacterAdded:Connect(function(character)
+            character:WaitForChild("Torso", 10)
+                or character:WaitForChild("UpperTorso", 10)
+            giveLight(character)
+        end)
+
+        if player.Character then
+            giveLight(player.Character)
+        end
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        connectPlayer(player)
+    end
+
+    Players.PlayerAdded:Connect(connectPlayer)
+end)
